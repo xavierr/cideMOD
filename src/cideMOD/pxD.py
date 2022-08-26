@@ -29,7 +29,7 @@ from cideMOD.simulation_interface.triggers import SolverCrashed, TriggerDetected
 from cideMOD.helpers.config_parser import CellParser
 from cideMOD.helpers.miscellaneous import constant_expression, format_time
 from cideMOD.helpers.warehouse import Warehouse
-from cideMOD.mesh.base_mesher import DolfinMesher, SubdomainMapper
+from cideMOD.mesh.base_mesher import Cylinder, DolfinMesher, SubdomainMapper, Cylinder
 from cideMOD.mesh.gmsh_adapter import GmshMesher
 from cideMOD.models.cell_components import CurrentColector, Electrode, Separator
 from cideMOD.models.degradation.equations import *
@@ -88,6 +88,8 @@ class Problem:
     def mesh(self, mesh_engine=DolfinMesher, copy=False):
         if mesh_engine is None:
             mesh_engine = DolfinMesher
+        elif mesh_engine == "Cylinder":
+            mesh_engine=Cylinder
         self.mesher = mesh_engine(options=self.model_options, cell=self.cell)
         self.mesher.build_mesh()
 
@@ -349,6 +351,7 @@ class Problem:
 
         timer.stop()
         _print('Problem Setup finished.')
+        self.dofs=MPI.sum(comm,len(self.u_2.block_vector()))
         _print("Problem has {} dofs.\n".format(MPI.sum(comm,len(self.u_2.block_vector()))))
         self.ready=True
 
