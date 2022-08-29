@@ -408,6 +408,8 @@ class DolfinMesher(BaseMesher):
         self.dS_a_cc = self.dS(self.field_data['interfaces']['anode-CC'], metadata={**meta, "direction": int_dir("-")})
         self.dS_cc_c = self.dS(self.field_data['interfaces']['cathode-CC'], metadata={**meta, "direction": int_dir("-")})
         self.dS_c_cc = self.dS(self.field_data['interfaces']['cathode-CC'], metadata={**meta, "direction": int_dir("+")})
+        XDMFFile("Box_checks/box_verify_interfaces.xdmf").write(self.interfaces)
+        XDMFFile("Box_checks/box_verify_subdomains.xdmf").write(self.subdomains)
 
         timer.stop()
         print('Finished building mesh')
@@ -421,7 +423,6 @@ class Cylinder(BaseMesher):
         #Load cylinder length 3 in z-direction, radius sqrt(1/pi) in order to get
         #a cylinder with the same volume as a cube with same length
         self.mesh=Mesh("cylinder_pi.xml")
-        print("Actually the cylinder!")
         #Define class to rotate and translate
         rot=MeshTransformation 
         #rotation
