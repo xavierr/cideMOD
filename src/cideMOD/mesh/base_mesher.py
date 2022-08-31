@@ -43,7 +43,8 @@ from numpy import array, concatenate, ndarray, zeros
 from cideMOD.helpers.config_parser import CellParser
 from cideMOD.helpers.miscellaneous import inside_element_expression
 from cideMOD.models.model_options import ModelOptions
-
+import traceback
+import os
 
 class SubdomainGenerator:
     def __init__(self):
@@ -422,7 +423,10 @@ class Cylinder(BaseMesher):
         print('Building simple cylindrical mesh from cylinder_pi.xml')
         #Load cylinder length 3 in z-direction, radius sqrt(1/pi) in order to get
         #a cylinder with the same volume as a cube with same length
-        self.mesh=Mesh("cylinder_pi.xml")
+        #Make sure that this cylinder is collected at the right location
+        stack = traceback.extract_stack()
+        file_loc=stack[-1].filename
+        self.mesh=Mesh(os.path.dirname(file_loc) + "/" + "cylinder_pi.xml")
         #Define class to rotate and translate
         rot=MeshTransformation 
         #rotation
