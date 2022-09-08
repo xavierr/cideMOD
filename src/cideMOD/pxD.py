@@ -90,6 +90,8 @@ class Problem:
             mesh_engine = DolfinMesher
         elif mesh_engine == "Cylinder":
             mesh_engine=Cylinder
+        elif mesh_engine == "GmshMesher":
+            mesh_engine=GmshMesher
         self.mesher = mesh_engine(options=self.model_options, cell=self.cell)
         self.mesher.build_mesh()
 
